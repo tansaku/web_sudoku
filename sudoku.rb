@@ -1,13 +1,14 @@
 require 'sinatra'
+require 'rack-flash'
+require 'sinatra/partial'
 require_relative './lib/sudoku'
 require_relative './lib/cell'
 require_relative './helpers/application'
 
-require 'sinatra/partial'
-
+enable :sessions
+set :session_secret, "I'm the secret key to sign the cookie"
+use Rack::Flash
 set :partial_template_engine, :erb
-
-	enable :sessions
 
 	def random_sudoku
 		seed = (1..9).to_a.shuffle + Array.new(81-9, 0)
@@ -43,30 +44,30 @@ set :partial_template_engine, :erb
 	end
 
 	def prepare_to_check_solution
-		@check_solution = session[:check_solution]
-		session[:check_solution] = nil
+	  @check_solution = session[:check_solution]
+	  if @check_solution
+	    flash[:notice] = "Incorrect values are highlighted in yellow"
+	  end
+	  session[:check_solution] = nil
 	end
 
 	get '/' do
-		prepare_to_check_solution
-		generate_new_puzzle_if_necessary
-		@current_solution = session[:current_solution] || session[:puzzle]
-		@solution = session[:solution]
-		@puzzle = session[:puzzle]
-		# sudoku = random_sudoku
-		# session[:solution] = sudoku
-		# @current_solution = random_sudoku
-		erb :index
+	  prepare_to_check_solution
+	  generate_new_puzzle_if_necessary
+	  @current_solution = session[:current_solution] || session[:puzzle]
+	  @solution = session[:solution]
+	  @puzzle = session[:puzzle]
+	  erb :index
 	end
 
 	get '/solution' do
-	  @current_solution = session[:solution]
+	  @puzzle = session[:solution]
 	  erb :index
 	end
 
 	post '/' do
-		cells = params["cell"]
-		session[:current_solution] = cells.map {|value| value.to_i }.join
-		session[:check_solution] = true
-		redirect to("/")
+	  cells = box_order_to_row_order(params["cell"])
+	  session[:current_solution] = cells.map{|value| value.to_i }.join
+	  session[:check_solution] = true
+	  redirect to("/")
 	end
