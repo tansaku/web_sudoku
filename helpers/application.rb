@@ -1,5 +1,5 @@
 helpers do
-	
+
 	def colour_class(solution_to_check, puzzle_value, current_solution_value, solution_value)
 	must_be_guessed = puzzle_value == 0
 	tried_to_guess = current_solution_value.to_i != 0
