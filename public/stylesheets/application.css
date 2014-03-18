@@ -22,3 +22,11 @@ div.box, div.cell {
 		font-size: 20px;
 	}
 
+	.incorrect {
+		background-color: yellow;
+	}
+
+	.value-provided {
+		background-color: #DDD;
+	}
+

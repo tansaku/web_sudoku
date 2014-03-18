@@ -1,6 +1,7 @@
 require 'sinatra'
 require_relative './lib/sudoku'
 require_relative './lib/cell'
+require_relative './helpers/application'
 
 	enable :sessions
 
@@ -29,10 +30,28 @@ require_relative './lib/cell'
 			memo += three_rows_of_three.flatten }
 	end
 
-	get '/' do
+	def generate_new_puzzle_if_necessary
+		return if session[:current_solution]
 		sudoku = random_sudoku
 		session[:solution] = sudoku
-		@current_solution = random_sudoku
+		session[:puzzle] = puzzle(sudoku)
+		session[:current_solution] = session[:puzzle]
+	end
+
+	def prepare_to_check_solution
+		@check_solution = session[:check_solution]
+		session[:check_solution] = nil
+	end
+
+	get '/' do
+		prepare_to_check_solution
+		generate_new_puzzle_if_necessary
+		@current_solution = session[:current_solution] || session[:puzzle]
+		@solution = session[:solution]
+		@puzzle = session[:puzzle]
+		# sudoku = random_sudoku
+		# session[:solution] = sudoku
+		# @current_solution = random_sudoku
 		erb :index
 	end
 
