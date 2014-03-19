@@ -16,20 +16,6 @@ class Sudoku
     @cells.map(&:value).join
   end
 
-
-  # The to_board method creates this board representation for output
-  #
-  # 6 1 5 | 4 9 3 | 8 7 2
-  # 3 4 8 | 1 2 7 | 9 5 6
-  # 2 7 9 | 5 6 8 | 4 3 1
-  # ---------------------
-  # 4 9 6 | 8 3 2 | 5 1 7
-  # 5 2 1 | 7 4 6 | 3 8 9
-  # 7 8 3 | 9 1 5 | 2 6 4
-  # ---------------------
-  # 9 5 2 | 6 8 1 | 7 4 3
-  # 8 6 4 | 3 7 9 | 1 2 5
-  # 1 3 7 | 2 5 4 | 6 9 8
   def to_board
     values = @cells.map(&:value) # get the values out of the cell objects
     rows = values.each_slice(COLUMN_SIZE).map do |row| # take every 9 values (that's a row)
