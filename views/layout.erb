@@ -1,0 +1,15 @@
+<html>
+	<head>
+	  <title>Sudoku Game</title>
+	  <link href="/stylesheets/application.css" rel="stylesheet" type="text/css">
+	</head>
+	  <body>
+	    <h1>Dem sudoku magic</h1>
+	     <div id="flash">
+	    	<%= flash[:notice] %>
+	  	</div>
+			<div id="sudoku">
+				<%= yield %>
+			</div>
+		</body>
+</html>
